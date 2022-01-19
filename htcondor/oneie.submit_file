@@ -11,12 +11,12 @@ JobBatchName = "ONEIE"
 # --------------------------------------------
 
 # Executable and its arguments
-executable    = $ENV(HOME)/.conda/envs/lyc/bin/python
+executable    = $ENV(HOME)/.conda/envs/oneie/bin/python
 arguments     = $ENV(HOME)/EventKG/oneie_v0.4.8/predict.py \
   -m /vol/research/lyc_d/oneie/english.role.v0.3.mdl \
-  -i $ENV(HOME)/EventKG/data/test/
-  -o $ENV(HOME)/EventKG/data/test_result/
-  -c $ENV(HOME)/EventKG/data/cs_result/
+  -i $ENV(HOME)/EventKG/data/test/ \
+  -o $ENV(HOME)/EventKG/data/test_result/ \
+  -c $ENV(HOME)/EventKG/data/cs_result/ \
   --format txt
 
 # ---------------------------------------------------

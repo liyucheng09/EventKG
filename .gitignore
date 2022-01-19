@@ -4,3 +4,7 @@ timeline17_event_timeline/
 test.tsv
 wikiplot.kwRAKE.tsv
 .DS_Store
+__pycache__/
+*.error
+*.log
+*.out
