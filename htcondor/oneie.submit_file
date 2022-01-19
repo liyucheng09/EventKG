@@ -1,0 +1,68 @@
+####################
+#
+# Example Job for HTCondor
+#
+####################
+
+#---------------------------------------------
+# Name your batch so it's easy to distinguish in the q.
+JobBatchName = "ONEIE"
+
+# --------------------------------------------
+
+# Executable and its arguments
+executable    = $ENV(HOME)/.conda/envs/lyc/bin/python
+arguments     = $ENV(HOME)/EventKG/oneie_v0.4.8/predict.py \
+  -m /vol/research/lyc_d/oneie/english.role.v0.3.mdl \
+  -i $ENV(HOME)/EventKG/data/test/
+  -o $ENV(HOME)/EventKG/data/test_result/
+  -c $ENV(HOME)/EventKG/data/cs_result/
+  --format txt
+
+# ---------------------------------------------------
+# Universe (vanilla, docker)
+universe         = docker
+docker_image     = nvidia/cuda:10.2-cudnn7-runtime-ubuntu16.04
+
+# -------------------------------------------------
+# Event, out and error logs
+log    = c$(cluster).p$(process).oneie.log
+output = c$(cluster).p$(process).oneie.out
+error  = c$(cluster).p$(process).oneie.error
+
+# -----------------------------------
+# File Transfer, Input, Output
+should_transfer_files = YES
+
+# Make certain project spaces available in container
+# environment = "mount=$ENV(HOME)"
+# environment = "mount=$ENV(HOME),/vol/research/nlg,/vol/research/lyc_d"
+environment = "mount=/vol/research/nlg,/vol/research/lyc_d"
+# environment = "mount='/vol/research/nlg'"
+# environment = "mount='/vol/research/lyc_d'"
+
+# -------------------------------------
+# Requirements for the Job (Requirements are explained in further detail in example09.submit_file)
+# NOTE: HasStornext is not valid on orca.
+requirements = (CUDAGlobalMemoryMb > 8000) && (CUDAGlobalMemoryMb <  25000) && \
+#              (HasStornext) && \
+			   (CUDACapability > 2.0) && (CUDACapability < 8.0)
+
+# --------------------------------------
+# Resources
+request_GPUs     = 1
+# this needs to be specified for the AI@Surrey cluster if requesting a GPU
++GPUMem          = 10000
+request_CPUs     = 1
+request_memory   = 8G
+
+#This job will complete in less than 1 hour
++JobRunTime = 7
+
+#This job can checkpoint
++CanCheckpoint = true
+
+# -----------------------------------
+# Queue commands
+queue 1 
+
